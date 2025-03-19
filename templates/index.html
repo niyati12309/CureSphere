@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CureSphere</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Navigation Bar -->
+        <div class="navbar">
+            <span class="logo">CureSphere</span>
+            <div class="nav-links">
+                <a href="{{ url_for('index') }}">Home</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </div>
+
+        <!-- Welcome Message -->
+        <h1>Welcome, {{ current_user.id }}!</h1>
+
+        <!-- Search Bar -->
+        <form class="search-form" action="{{ url_for('search') }}" method="get">
+            <input type="text" name="query" placeholder="Search records..." required>
+            <button type="submit">Search</button>
+        </form>
+
+        <!-- Folder Creation Form -->
+        <form class="folder-form" action="{{ url_for('create_folder') }}" method="post">
+            <input type="text" name="folder_name" placeholder="Enter folder name" required>
+            <button type="submit">Create Folder</button>
+        </form>
+
+        <!-- File Upload Form -->
+        <form class="upload-form" action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
+            <label for="file-upload">Choose File</label>
+            <input id="file-upload" type="file" name="file" accept=".pdf,.jpg,.jpeg,.png,.dicom" required>
+            <select name="category" required>
+                <option value="diagnostics">Diagnostics</option>
+                <option value="treatments">Treatments</option>
+                <option value="medications">Medications</option>
+            </select>
+            <select name="folder_id">
+                <option value="">No Folder</option>
+                {% for folder in folders %}
+                    <option value="{{ folder.id }}">{{ folder.folder_name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Upload</button>
+        </form>
+
+        <!-- Medical Records Section -->
+        <h2>Your Medical Records</h2>
+        <div id="records">
+            {% if records %}
+                {% for record in records %}
+                    <div class="record-item">
+                        <div>
+                            <span class="file-name">{{ record.file_name }}</span>
+                            <span class="file-type">{{ record.file_type }}</span>
+                            <span class="category">{{ record.category }}</span>
+                            {% if record.folder_id %}
+                                <span class="folder">Folder: {{ record.folder_name }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="actions">
+                            <a href="{{ url_for('uploaded_file', filename=record.file_name) }}" target="_blank">View</a>
+                            <button onclick="deleteRecord('{{ record.id }}')">Delete</button>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No records found.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- JavaScript for Dynamic Functionality -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+        function deleteRecord(recordId) {
+            if (confirm("Are you sure you want to delete this record?")) {
+                fetch(`/delete_record/${recordId}`, {
+                    method: 'DELETE',
+                }).then(response => {
+                    if (response.ok) {
+                        location.reload(); // Refresh the page after deletion
+                    }
+                });
+            }
+        }
+    </script>
+    <script>
+        function fetchRFID() {
+            fetch('/rfid')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.uid) {
+                        alert(`RFID Tag Scanned: ${data.uid}`);
+                    } else {
+                        console.log("No RFID tag scanned yet.");
+                    }
+                });
+        }
+    
+        // Poll the server every 2 seconds
+        setInterval(fetchRFID, 2000);
+    </script>
+      
+</body>
+</html>
