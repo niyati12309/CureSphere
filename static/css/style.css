@@ -5,6 +5,7 @@ body {
     margin: 0;
     padding: 0;
     color: #333;
+    line-height: 1.6;
 }
 
 /* Navigation Bar */
@@ -21,6 +22,7 @@ body {
 .navbar .logo {
     font-size: 1.5rem;
     font-weight: 600;
+    letter-spacing: 1px;
 }
 
 .nav-links a {
@@ -33,6 +35,20 @@ body {
 
 .nav-links a:hover {
     color: #f1c40f;
+}
+
+/* Dashboard Styles */
+.dashboard {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Welcome Message */
+.dashboard h1 {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 20px;
 }
 
 /* Search Bar */
@@ -157,7 +173,11 @@ body {
     transform: translateY(-2px);
 }
 
-/* Record Item */
+/* Medical Records Section */
+#records {
+    margin-top: 20px;
+}
+
 .record-item {
     background: white;
     padding: 20px;
@@ -229,161 +249,8 @@ body {
     transform: translateY(-2px);
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .navbar {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .nav-links {
-        margin-top: 10px;
-    }
-
-    .search-form,
-    .folder-form,
-    .upload-form {
-        flex-direction: column;
-    }
-
-    .search-form input,
-    .folder-form input,
-    .upload-form select {
-        width: 100%;
-    }
-
-    .record-item {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .record-item .actions {
-        margin-top: 10px;
-    }
-}
-
-/* Login Container */
-.login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #3498db, #2980b9);
-    padding: 20px;
-}
-
-/* Login Box */
-.login-box {
-    background: white;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-    max-width: 400px;
-    width: 100%;
-    text-align: center;
-}
-
-.login-box h1 {
-    font-size: 2rem;
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 10px;
-}
-
-.login-box p {
-    font-size: 1rem;
-    color: #7f8c8d;
-    margin-bottom: 30px;
-}
-
-/* Form Group */
-.form-group {
-    margin-bottom: 20px;
-    text-align: left;
-}
-
-.form-group label {
-    display: block;
-    font-size: 0.9rem;
-    color: #2c3e50;
-    margin-bottom: 8px;
-    font-weight: 500;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 1rem;
-    outline: none;
-    transition: border-color 0.3s ease;
-}
-
-.form-group input:focus {
-    border-color: #3498db;
-}
-
-/* Login Button */
-.login-box button {
-    width: 100%;
-    padding: 12px;
-    background: linear-gradient(135deg, #2ecc71, #27ae60);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-
-.login-box button:hover {
-    transform: translateY(-2px);
-}
-
-/* Signup Link */
-.signup-link {
-    margin-top: 20px;
-    font-size: 0.9rem;
-    color: #7f8c8d;
-}
-
-.signup-link a {
-    color: #3498db;
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s ease;
-}
-
-.signup-link a:hover {
-    color: #2980b9;
-}
-
-/* Responsive Design */
-@media (max-width: 480px) {
-    .login-box {
-        padding: 20px;
-    }
-
-    .login-box h1 {
-        font-size: 1.5rem;
-    }
-
-    .login-box p {
-        font-size: 0.9rem;
-    }
-
-    .form-group input {
-        padding: 10px;
-    }
-
-    .login-box button {
-        padding: 10px;
-    }
-}
-
-/* Register Container */
+/* Login and Register Containers */
+.login-container,
 .register-container {
     display: flex;
     justify-content: center;
@@ -393,7 +260,8 @@ body {
     padding: 20px;
 }
 
-/* Register Box */
+/* Login and Register Boxes */
+.login-box,
 .register-box {
     background: white;
     padding: 40px;
@@ -404,6 +272,7 @@ body {
     text-align: center;
 }
 
+.login-box h1,
 .register-box h1 {
     font-size: 2rem;
     font-weight: 600;
@@ -411,6 +280,7 @@ body {
     margin-bottom: 10px;
 }
 
+.login-box p,
 .register-box p {
     font-size: 1rem;
     color: #7f8c8d;
@@ -445,7 +315,8 @@ body {
     border-color: #3498db;
 }
 
-/* Register Button */
+/* Buttons */
+.login-box button,
 .register-box button {
     width: 100%;
     padding: 12px;
@@ -459,17 +330,20 @@ body {
     transition: transform 0.3s ease;
 }
 
+.login-box button:hover,
 .register-box button:hover {
     transform: translateY(-2px);
 }
 
-/* Login Link */
+/* Links */
+.signup-link,
 .login-link {
     margin-top: 20px;
     font-size: 0.9rem;
     color: #7f8c8d;
 }
 
+.signup-link a,
 .login-link a {
     color: #3498db;
     text-decoration: none;
@@ -477,20 +351,56 @@ body {
     transition: color 0.3s ease;
 }
 
+.signup-link a:hover,
 .login-link a:hover {
     color: #2980b9;
 }
 
 /* Responsive Design */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .nav-links {
+        margin-top: 10px;
+    }
+
+    .search-form,
+    .folder-form,
+    .upload-form {
+        flex-direction: column;
+    }
+
+    .search-form input,
+    .folder-form input,
+    .upload-form select {
+        width: 100%;
+    }
+
+    .record-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .record-item .actions {
+        margin-top: 10px;
+    }
+}
+
 @media (max-width: 480px) {
+    .login-box,
     .register-box {
         padding: 20px;
     }
 
+    .login-box h1,
     .register-box h1 {
         font-size: 1.5rem;
     }
 
+    .login-box p,
     .register-box p {
         font-size: 0.9rem;
     }
@@ -499,6 +409,7 @@ body {
         padding: 10px;
     }
 
+    .login-box button,
     .register-box button {
         padding: 10px;
     }
