@@ -2,3 +2,4 @@ gunicorn
 flask
 flask-login
 mysql-connector-python
+pytesseract
