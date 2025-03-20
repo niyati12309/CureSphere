@@ -92,22 +92,5 @@
             }
         }
     </script>
-    <script>
-        function fetchRFID() {
-            fetch('/rfid')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.uid) {
-                        alert(`RFID Tag Scanned: ${data.uid}`);
-                    } else {
-                        console.log("No RFID tag scanned yet.");
-                    }
-                });
-        }
-    
-        // Poll the server every 2 seconds
-        setInterval(fetchRFID, 2000);
-    </script>
-      
 </body>
 </html>

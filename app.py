@@ -7,8 +7,6 @@ import pytesseract
 from PIL import Image
 import bcrypt
 import uuid
-import serial
-import threading
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads/'
@@ -36,27 +34,6 @@ def get_db_connection():
         password="Chiku@2006",
         database="CureSphere"
     )
-
-# Global variable to store the latest RFID UID
-latest_uid = None
-
-# Serial port configuration
-SERIAL_PORT = 'COM3'  # Replace with your ESP32's serial port (e.g., '/dev/ttyUSB0' on Linux/Mac)
-BAUD_RATE = 115200
-
-# Function to read Serial data
-def read_serial():
-    global latest_uid
-    ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=1)
-    while True:
-        if ser.in_waiting > 0:
-            line = ser.readline().decode('utf-8').strip()
-            if line.startswith("UID:"):
-                latest_uid = line.split(":")[1]
-                print(f"Received UID: {latest_uid}")
-
-# Start Serial reader in a separate thread
-threading.Thread(target=read_serial, daemon=True).start()
 
 # Home route
 @app.route('/')
@@ -243,15 +220,6 @@ def delete_record(record_id):
         conn.close()
 
     return '', 204  # No content response
-
-# RFID Endpoint
-@app.route('/rfid', methods=['GET'])
-def get_rfid():
-    global latest_uid
-    if latest_uid:
-        return jsonify({"uid": latest_uid}), 200
-    else:
-        return jsonify({"error": "No UID received"}), 404
 
 # Run the application
 if __name__ == '__main__':
