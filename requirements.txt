@@ -1,3 +1,4 @@
 gunicorn
 flask
 flask-login
+mysql-connector-python
