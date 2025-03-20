@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory, flash, jsonify
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-import mysql.connector
+import psycopg2
 import os
 from werkzeug.utils import secure_filename
 import pytesseract
@@ -28,19 +28,21 @@ def load_user(user_id):
 
 # Database connection
 def get_db_connection():
-    return mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="Chiku@2006",
-        database="CureSphere"
+    conn = psycopg2.connect(
+        dbname="curesphere",
+        user="curesphereuser",
+        password="78Pw888qGgoOCWjDJOLwcEaY0FM0XUSy",
+        host="dpg-cve83bd6l47c73abvq00-a.oregon-postgres.render.com",
+        port="5432"
     )
+    return conn
 
 # Home route
 @app.route('/')
 @login_required
 def index():
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
     # Fetch folders
     cursor.execute("SELECT * FROM folders WHERE user_id = %s", (current_user.id,))
@@ -73,7 +75,7 @@ def register():
             )
             conn.commit()
             flash('Registration successful! Please log in.', 'success')
-        except mysql.connector.Error as err:
+        except psycopg2.Error as err:
             flash(f'Error: {err}', 'error')
         finally:
             cursor.close()
@@ -91,14 +93,14 @@ def login():
         password = request.form['password']
 
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
         cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
         user = cursor.fetchone()
         cursor.close()
         conn.close()
 
-        if user and bcrypt.checkpw(password.encode('utf-8'), user['password_hash'].encode('utf-8')):
-            user_obj = User(user['user_id'])
+        if user and bcrypt.checkpw(password.encode('utf-8'), user[1].encode('utf-8')):
+            user_obj = User(user[2])
             login_user(user_obj)
             return redirect(url_for('index'))
         else:
@@ -150,7 +152,7 @@ def upload_file():
         )
         conn.commit()
         flash('File uploaded successfully!', 'success')
-    except mysql.connector.Error as err:
+    except psycopg2.Error as err:
         flash(f'Error: {err}', 'error')
     finally:
         cursor.close()
@@ -170,7 +172,7 @@ def uploaded_file(filename):
 def search():
     query = request.args.get('query', '')
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
     cursor.execute(
         "SELECT * FROM medical_records WHERE user_id = %s AND (file_name LIKE %s OR metadata LIKE %s)",
         (current_user.id, f"%{query}%", f"%{query}%")
@@ -195,7 +197,7 @@ def create_folder():
         )
         conn.commit()
         flash('Folder created successfully!', 'success')
-    except mysql.connector.Error as err:
+    except psycopg2.Error as err:
         flash(f'Error: {err}', 'error')
     finally:
         cursor.close()
@@ -213,7 +215,7 @@ def delete_record(record_id):
         cursor.execute("DELETE FROM medical_records WHERE id = %s AND user_id = %s", (record_id, current_user.id))
         conn.commit()
         flash('Record deleted successfully!', 'success')
-    except mysql.connector.Error as err:
+    except psycopg2.Error as err:
         flash(f'Error: {err}', 'error')
     finally:
         cursor.close()
